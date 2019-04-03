@@ -2,29 +2,53 @@ from bs4 import BeautifulSoup
 
 import requests
 
-url = "hackathons.hackclub.com/"
+import sys
 
-r  = requests.get("http://" +url)
+def scrape():
 
-data = r.text
+    url = "http://hackathons.hackclub.com/"
 
-soup = BeautifulSoup(data, "html.parser")
+    r = requests.get(url)
 
-nameList = soup.select('#___gatsby > div > div > div > div > a > div > h3')
-#
-#for name in nameList:
-#    print(name.text)
+    data = r.text
 
-dateList = soup.select('#___gatsby > div > div > div > div > a > div > div:nth-of-type(3) > p:nth-of-type(1)')
-#
-#for date in dateList:
-#    print(date.text)
+    soup = BeautifulSoup(data, "html.parser")
 
-placeList = soup.select('#___gatsby > div > div > div > div > a > div > div:nth-of-type(3) > p:nth-of-type(2)')
-#
-#for place in placeList:
-#    print(place.text)
+    #try to get list of hackathon names and print them
 
-print(len(nameList),
-len(dateList),
-len(placeList))
+    try:
+        nameList = soup.select('#___gatsby > div > div:nth-of-type(2) > div > div > a > div > [class*="sc-"]:nth-of-type(1)')
+        
+        #deleting unwanted filler stuff in nameList
+        nameList = nameList[1::2]
+        
+#        for name in nameList:
+#            print(name.text)
+    except IndexError:
+        print('No matching element found.')
+
+    #try to get list of hackathon dates and print them
+    try:
+        dateList = soup.select('#___gatsby > div > div:nth-of-type(2) > div > div > a > div > [class*="sc-"] > p:nth-of-type(1)')
+#        for date in dateList:
+#            print(date.text)
+    except IndexError:
+        print('No matching element found.')
+
+    #try to get list of hackathon places and print them
+    try:
+        placeList = soup.select('#___gatsby > div > div:nth-of-type(2) > div > div > a > div > [class*="sc-"] > p:nth-of-type(2)')
+    #    for place in placeList:
+    #        print(place.text)
+    except IndexError:
+        print('No matching element found.')
+
+    print(len(nameList),
+    len(dateList),
+    len(placeList))
+
+    for index,x in enumerate(nameList):
+        print(nameList[index].text)
+        print(dateList[index].text)
+        print(placeList[index].text)
+scrape()
