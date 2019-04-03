@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 
 import requests
 
-url = "lite.cnn.io/en/article/h_8bb48757ef80597c3c142ebfe96db668"
+url = "hackathons.hackclub.com/"
 
 r  = requests.get("http://" +url)
 
@@ -10,8 +10,12 @@ data = r.text
 
 soup = BeautifulSoup(data, "html.parser")
 
-print(soup.(find_all('p')).string)
+#nameList = soup.select('#___gatsby > div > div > div > div > a > div > h3')
+#
+#for name in nameList:
+#    print(name.text)
 
+dateList = soup.select('#___gatsby > div > div > div > div > a > div > div:nth-of-type(3) > p:nth-of-type(1)')
 
-#for link in soup.find_all('p'):
-#    print(link.get('p'))
+for date in dateList:
+    print(date.text)
