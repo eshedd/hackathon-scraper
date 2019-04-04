@@ -70,4 +70,25 @@ def hackclub():
         hackathons.append(Hackathon(nameList[index].text,dateList[index].text,placeList[index].text,linkList[index]['href']))
     return hackathons
 
-print(hackclub()[15].date)
+def hackevents():
+    url = "https://hackevents.co/search/anything/anywhere/anytime"
+
+    r = requests.get(url)
+
+    data = r.content
+
+    soup = BeautifulSoup(data, "html.parser")
+    
+    try:
+        nameList = soup.select('body > div.container > div:nth-child(2) > div > a > div > div > div > div > div > div > h3')
+
+        #deleting unwanted img(?) between each title in nameList
+#        nameList = nameList[1::2]
+        print(nameList)
+        for name in nameList:
+            print(name.text)
+    except IndexError:
+        print('No matching element found.')
+    
+hackclubHacks = hackclub()
+hackevents()
