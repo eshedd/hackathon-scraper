@@ -5,21 +5,22 @@ import requests
 import sys
 
 class Hackathon:
-    def __init__(self, name, date, place):
+    def __init__(self, name, date, place, link):
         self.name = name
         self.date = date
         self.place = place
+        self.link = link
         
 def hackclub():
     url = "http://hackathons.hackclub.com/"
 
     r = requests.get(url)
 
-    data = r.text
+    data = r.content
 
     soup = BeautifulSoup(data, "html.parser")
 
-    #try to get list of hackathon names and print them
+    #try to get list of hackathon names
     try:
         nameList = soup.select('#___gatsby > div > div:nth-of-type(2) > div > div > a > div > [class*="sc-"]:nth-of-type(1)')
 
@@ -32,7 +33,7 @@ def hackclub():
     except IndexError:
         print('No matching element found.')
 
-    #try to get list of hackathon dates and print them
+    #try to get list of hackathon dates
     try:
         dateList = soup.select('#___gatsby > div > div:nth-of-type(2) > div > div > a > div > [class*="sc-"] > p:nth-of-type(1)')
     #        prints all the dates in dateList
@@ -41,7 +42,7 @@ def hackclub():
     except IndexError:
         print('No matching element found.')
 
-    #try to get list of hackathon places and print them
+    #try to get list of hackathon places
     try:
         placeList = soup.select('#___gatsby > div > div:nth-of-type(2) > div > div > a > div > [class*="sc-"] > p:nth-of-type(2)')
     #    prints all the places in placeList
@@ -49,7 +50,16 @@ def hackclub():
     #        print(place.text)
     except IndexError:
         print('No matching element found.')
-
+    
+    #try to get list of hackathon links
+    try: 
+        linkList = soup.select('#___gatsby > div > div:nth-of-type(2) > div > div > a[href]')
+    #    prints all the links in linkList 
+    #    for link in linkList:
+    #        print(link['href'])
+    except IndexError:
+        print('No matching element found.')
+    
 
     #prints how many names, dates, and places were scraped
     #print("Names:", len(nameList), " Dates:", len(dateList), " Places:", len(placeList))
@@ -57,8 +67,7 @@ def hackclub():
     #fills hack list with hackathon objects
     hackathons = []
     for index,x in enumerate(nameList):
-        hack.append(Hackathon(nameList[index].text,dateList[index].text,placeList[index].text))
-
+        hackathons.append(Hackathon(nameList[index].text,dateList[index].text,placeList[index].text,linkList[index]['href']))
     return hackathons
 
-
+print(hackclub()[15].date)
